@@ -5,8 +5,10 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import { useState } from "react";
 
 function Auth() {
@@ -14,12 +16,23 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [isLoginClicked, setIsLoginClicked] = useState(false);
 
+  const createUser = async (user) => {
+    // console.log(user);
+    try {
+      const usersRef = doc(db, "users", user.email);
+      await setDoc(usersRef, { email: user.email }, { merge: true });
+    } catch (error) {
+      console.log(error.messagge);
+    }
+  };
+
   const handleGoogleSignIn = async () => {
     try {
       const googleProvider = new GoogleAuthProvider();
       const response = await signInWithPopup(auth, googleProvider);
       const user = response.user;
-      console.log(user);
+      createUser(user);
+      //   console.log(user);
     } catch (err) {
       console.log(err.message);
     }
@@ -28,85 +41,123 @@ function Auth() {
   const handleEmailSignup = async (e) => {
     e.preventDefault();
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(user);
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      createUser(userCred.user);
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEmailSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      setEmail("");
+      setPassword("");
+      //   console.log(userCred.user);
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <form className={classes.auth} onSubmit={handleEmailSignup}>
-      <Button variant="contained" onClick={handleGoogleSignIn}>
-        <FcGoogle className={classes["google-icon"]} />
-        sign in with google
-      </Button>
-
-      {isLoginClicked ? (
-        <p className={classes["signup--text"]}>SIGN IN WITH EMAIL</p>
-      ) : (
-        <p className={classes["signup--text"]}>OR SIGN UP WITH EMAIL</p>
-      )}
-
-      <div className={classes["email--label"]}>
-        <label htmlFor="email">Email</label>
-      </div>
-      <input
-        type={"email"}
-        id="email"
-        autoComplete="off"
-        className={classes["email--input"]}
-        placeholder="your@email.com"
-        onChange={(e) => {
-          setEmail(e.target.value);
-        }}
-      />
-
-      <div className={classes["password--label"]}>
-        <label htmlFor="password">Password</label>
-      </div>
-      <input
-        type={"password"}
-        id="password"
-        placeholder="Password"
-        className={classes["password--input"]}
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-      />
-
-      <Button
-        type="submit"
-        variant="contained"
-        style={{ backgroundColor: "#E65B7C" }}
+    <div className={classes["auth--container"]}>
+      <form
+        className={classes.auth}
+        onSubmit={isLoginClicked ? handleEmailSignIn : handleEmailSignup}
       >
-        get started
-      </Button>
-
-      {isLoginClicked ? (
-        <Button
-          variant="text"
-          onClick={() => {
-            setIsLoginClicked(false);
-          }}
-          style={{ fontWeight: "700", letterSpacing: "1px" }}
-        >
-          sign up with email
+        <Button variant="contained" onClick={handleGoogleSignIn}>
+          <FcGoogle className={classes["google-icon"]} />
+          sign in with google
         </Button>
-      ) : (
-        <div className={classes["login--text"]}>
-          <p>Already have an account? </p>
-          <Button
-            variant="text"
-            onClick={() => {
-              setIsLoginClicked(true);
-            }}
-          >
-            log in
-          </Button>
+
+        {isLoginClicked ? (
+          <p className={classes["signup--text"]}>SIGN IN WITH EMAIL</p>
+        ) : (
+          <p className={classes["signup--text"]}>OR SIGN UP WITH EMAIL</p>
+        )}
+
+        <div className={classes["email--label"]}>
+          <label htmlFor="email">Email</label>
         </div>
-      )}
-    </form>
+        <input
+          type={"email"}
+          value={email}
+          id="email"
+          autoComplete="off"
+          className={classes["email--input"]}
+          placeholder="your@email.com"
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+        />
+
+        <div className={classes["password--label"]}>
+          <label htmlFor="password">Password</label>
+        </div>
+        <input
+          type={"password"}
+          value={password}
+          id="password"
+          placeholder="Password"
+          className={classes["password--input"]}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
+
+        {isLoginClicked ? (
+          <Button
+            type="submit"
+            variant="contained"
+            style={{ backgroundColor: "#E65B7C" }}
+          >
+            login
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            variant="contained"
+            style={{ backgroundColor: "#E65B7C" }}
+          >
+            get started
+          </Button>
+        )}
+
+        {isLoginClicked ? (
+          <div>
+            <p>Don't have an account?</p>
+            <Button
+              variant="text"
+              onClick={() => {
+                setIsLoginClicked(false);
+              }}
+              style={{ letterSpacing: "1px" }}
+            >
+              sign up with email
+            </Button>
+          </div>
+        ) : (
+          <div className={classes["login--text"]}>
+            <p>Already have an account? </p>
+            <Button
+              variant="text"
+              onClick={() => {
+                setIsLoginClicked(true);
+              }}
+            >
+              log in
+            </Button>
+          </div>
+        )}
+      </form>
+    </div>
   );
 }
 

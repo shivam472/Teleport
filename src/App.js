@@ -1,10 +1,12 @@
 import "./App.css";
 import Authentication from "./pages/Authentication";
+import Main from "./pages/Main";
 
 function App() {
   return (
     <div className="App">
-      <Authentication />
+      {/* <Authentication /> */}
+      <Main />
     </div>
   );
 }
