@@ -6,21 +6,40 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import AuthContext from "../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 
 function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginClicked, setIsLoginClicked] = useState(false);
+  const { setLoginStatus, setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [currentUser, setCurrentUser] = useState({});
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setCurrentUser(currentUser);
+    });
+  }, []);
 
   const createUser = async (user) => {
     // console.log(user);
     try {
       const usersRef = doc(db, "users", user.email);
-      await setDoc(usersRef, { email: user.email }, { merge: true });
+      await setDoc(
+        usersRef,
+        { email: user.email, friends: [] },
+        { merge: true }
+      );
+      setLoginStatus(true);
+      setUser(currentUser.email);
     } catch (error) {
       console.log(error.messagge);
     }
@@ -32,7 +51,8 @@ function Auth() {
       const response = await signInWithPopup(auth, googleProvider);
       const user = response.user;
       createUser(user);
-      //   console.log(user);
+      navigate("/main");
+      console.log(user);
     } catch (err) {
       console.log(err.message);
     }
@@ -47,6 +67,7 @@ function Auth() {
         password
       );
       createUser(userCred.user);
+      navigate("/main");
       setEmail("");
       setPassword("");
     } catch (error) {
@@ -57,7 +78,10 @@ function Auth() {
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
     try {
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
+      setLoginStatus(true);
+      setUser(currentUser.email);
+      navigate("/main");
       setEmail("");
       setPassword("");
       //   console.log(userCred.user);

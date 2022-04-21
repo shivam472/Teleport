@@ -7,12 +7,17 @@
   align-items: center;
 }
 
+.user {
+  color: white;
+  width: 90%;
+}
+
 .search {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 20px 0 40px 0;
   padding: 5px;
 }
 .friends--search {
@@ -20,6 +25,7 @@
   padding: 10px;
   border-radius: 5px 0 0 5px;
   border: none;
+  outline: none;
 }
 .search--icon {
   color: rgb(30, 29, 29);
@@ -27,4 +33,13 @@
   padding: 10px;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
+}
+
+.searched--friend {
+  color: white;
+  margin-right: 20px;
+  font-size: large;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
