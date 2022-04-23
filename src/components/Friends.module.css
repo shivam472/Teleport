@@ -1,15 +1,16 @@
 .friends--section {
-  background-color: #202020;
+  background: linear-gradient(to right, #110e18, #130f1c, #171328);
   height: 100vh;
-  width: 350px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  flex-grow: 1;
+  border-right: 1px solid #2a1f38;
 }
 
 .user {
   color: white;
-  width: 90%;
+  width: 100%;
+  margin-left: 10px;
 }
 
 .search {
@@ -17,7 +18,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 20px 0 40px 0;
+  margin: 20px 0 30px 0;
   padding: 5px;
 }
 .friends--search {
@@ -37,7 +38,7 @@
 
 .searched--friend {
   color: white;
-  margin-right: 20px;
+  margin: 10px 30px;
   font-size: large;
   display: flex;
   justify-content: space-between;

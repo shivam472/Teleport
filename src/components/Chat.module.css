@@ -1,0 +1,40 @@
+.chat--section {
+  background: linear-gradient(to right, #131420, #181329, #1a1223);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 15;
+}
+
+.chat--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #2a1f38;
+  margin: 0 20px;
+}
+
+.selected--friend {
+  color: white;
+}
+
+.chat {
+  position: relative;
+  top: 550px;
+  display: flex;
+  align-items: center;
+  width: 90%;
+  left: 5%;
+}
+
+.message--input {
+  padding: 15px;
+  flex-grow: 1;
+  background-color: transparent;
+  outline: none;
+  border: 2px solid #292633;
+  border-radius: 10px;
+  margin: 20px 10px;
+  color: white;
+  font-size: medium;
+}

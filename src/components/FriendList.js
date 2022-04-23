@@ -1,10 +1,12 @@
 import { db } from "../firebase";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { useEffect, useState, useContext } from "react";
+import AuthContext from "../contexts/authContext";
 import classes from "./FriendList.module.css";
 
 function FriendList(props) {
   const [friends, setFriends] = useState([]);
+  const { setFriend: setSelectedFriend } = useContext(AuthContext);
 
   useEffect(() => {
     const handleFriendsUpdates = () => {
@@ -22,33 +24,23 @@ function FriendList(props) {
     handleFriendsUpdates();
   }, [props.user]);
 
-  //   useEffect(() => {
-  //     const handleFriends = async () => {
-  //         const docRef = doc(db, "users", props.user);
-  //       const docSnap = await getDoc(docRef);
-  //       if (docSnap.exists()) {
-  //         const docData = docSnap.data();
-  //         console.log("inside handleFriends ", docData);
-  //         if (docData.friends) {
-  //           setFriends([...docData.friends]);
-  //         }
-  //       } else {
-  //         console.log("No such document");
-  //       }
-  //     };
-
-  //     handleFriends();
-  //   }, [props.user]);
-
   return (
-    <div>
-      <p className={classes.friends}>Friends</p>
-      <div className={classes["friend--list"]}>
+    <>
+      <p className={classes["friends--text"]}>Friends</p>
+      <ul className={classes["friend--list"]}>
         {friends.map((friend) => (
-          <div key={friend}>{friend}</div>
+          <li
+            key={friend}
+            className={classes["friend--email"]}
+            onClick={() => {
+              setSelectedFriend(friend);
+            }}
+          >
+            {friend}
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </>
   );
 }
 

@@ -4,23 +4,37 @@ const AuthContext = createContext();
 
 export const AuthContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState("");
+  const [selectedFriend, setSelectedFriend] = useState("");
+  const [callNotification, setCallNotification] = useState(false);
 
   const setLoginStatus = (status) => {
-    console.log("login status: ", status);
+    console.log("inside authCtx, login status: ", status);
     setIsLoggedIn(status);
   };
 
-  const setCurrentUser = (email) => {
-    console.log("user email: ", email);
-    setUser(email);
+  const setFriend = (selectedEmail) => {
+    setSelectedFriend(selectedEmail);
+    console.log("inside authCtx, current selected friend: ", selectedEmail);
+  };
+
+  const showCallNotification = () => {
+    setCallNotification(true);
+    console.log("inside showCallNotification");
+  };
+
+  const hideCallNotification = () => {
+    setCallNotification(false);
+    console.log("inside hideCallNotification");
   };
 
   const contextObj = {
     isLoggedIn,
+    selectedFriend,
+    callNotification,
     setLoginStatus,
-    userEmail: user,
-    setUser: setCurrentUser,
+    setFriend,
+    showCallNotification,
+    hideCallNotification,
   };
 
   return (

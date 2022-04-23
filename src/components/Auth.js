@@ -6,11 +6,10 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 
@@ -18,28 +17,28 @@ function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginClicked, setIsLoginClicked] = useState(false);
-  const { setLoginStatus, setUser } = useContext(AuthContext);
+  const { setLoginStatus } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [currentUser, setCurrentUser] = useState({});
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setCurrentUser(currentUser);
-    });
-  }, []);
-
   const createUser = async (user) => {
-    // console.log(user);
     try {
       const usersRef = doc(db, "users", user.email);
-      await setDoc(
-        usersRef,
-        { email: user.email, friends: [] },
-        { merge: true }
-      );
+      const docSnap = await getDoc(usersRef);
+
+      // place user's email into the database if the user is logging in for the first time
+      if (!docSnap.exists()) {
+        await setDoc(
+          usersRef,
+          {
+            email: user.email,
+            friends: [],
+            notification: { caller: "", incomingCall: false },
+          },
+          { merge: true }
+        );
+      }
+
       setLoginStatus(true);
-      setUser(currentUser.email);
     } catch (error) {
       console.log(error.messagge);
     }
@@ -52,7 +51,7 @@ function Auth() {
       const user = response.user;
       createUser(user);
       navigate("/main");
-      console.log(user);
+      console.log("inside handleSignIn: ", user);
     } catch (err) {
       console.log(err.message);
     }
@@ -80,7 +79,6 @@ function Auth() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setLoginStatus(true);
-      setUser(currentUser.email);
       navigate("/main");
       setEmail("");
       setPassword("");

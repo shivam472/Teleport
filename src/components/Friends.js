@@ -1,39 +1,34 @@
 import classes from "./Friends.module.css";
 import { FiSearch } from "react-icons/fi";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { db } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase";
 import FriendList from "./FriendList";
 
-function Friends() {
+function Friends(props) {
   const [inputEmail, setInputEmail] = useState("");
   const [searchedFriend, setSearchedFriend] = useState("");
-  const [currentUser, setCurrentUser] = useState("");
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setCurrentUser(currentUser.email);
-    });
-  });
 
   const handleFriendSearch = async (inputEmail) => {
-    if (inputEmail !== currentUser) {
+    if (inputEmail !== props.user) {
       const docRef = doc(db, "users", inputEmail);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        const currentUserDocRef = doc(db, "users", currentUser);
-        const currentDocSnap = await getDoc(currentUserDocRef);
-        const currentDocData = currentDocSnap.data();
-        if (!currentDocData.friends.includes(inputEmail)) {
-          console.log("Document data: ", docSnap.data());
-          const docData = docSnap.data();
-          setSearchedFriend(docData.email);
+        try {
+          const currentUserDocRef = doc(db, "users", props.user);
+          const currentDocSnap = await getDoc(currentUserDocRef);
+          const currentDocData = currentDocSnap.data();
+          if (!currentDocData.friends.includes(inputEmail)) {
+            console.log("Document data: ", docSnap.data());
+            const docData = docSnap.data();
+            setSearchedFriend(docData.email);
+          }
+          setInputEmail("");
+        } catch (error) {
+          console.log(error);
         }
-        setInputEmail("");
       } else {
         console.log("No such document!");
       }
@@ -42,14 +37,24 @@ function Friends() {
 
   const handleAddFriend = async () => {
     try {
-      const docRef = doc(db, "users", currentUser);
+      // both the parties will be added to each other's friend lists
+      const docRef = doc(db, "users", props.user);
       const docSnap = await getDoc(docRef);
       const docData = docSnap.data();
-      const newFriend = {
-        ...docData,
+      const searchedFriendDocRef = doc(db, "users", searchedFriend);
+      const searchedFriendDocSnap = await getDoc(searchedFriendDocRef);
+      const searchedFriendDocData = searchedFriendDocSnap.data();
+
+      // add a friend into the current user's friend list
+      await updateDoc(docRef, {
         friends: [...docData.friends, searchedFriend],
-      };
-      await updateDoc(docRef, newFriend);
+      });
+
+      // add the current user as a friend into the searched user's friend's list
+      await updateDoc(searchedFriendDocRef, {
+        friends: [...searchedFriendDocData.friends, props.user],
+      });
+
       setSearchedFriend("");
     } catch (error) {
       console.log(error.message);
@@ -58,7 +63,7 @@ function Friends() {
 
   return (
     <section className={classes["friends--section"]}>
-      <h3 className={classes.user}>{currentUser}</h3>
+      <h3 className={classes.user}>{props.user}</h3>
       <div className={classes.search}>
         <input
           type={"search"}
@@ -88,7 +93,9 @@ function Friends() {
           />
         </div>
       )}
-      <FriendList user={currentUser} />
+      <div className={classes["friend--list"]}>
+        <FriendList user={props.user} />
+      </div>
     </section>
   );
 }
