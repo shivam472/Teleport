@@ -6,7 +6,7 @@ import { db } from "../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
 function NotificationModal(props) {
-  const { hideCallNotification } = useContext(AuthContext);
+  const { hideCallNotification, peerInstance } = useContext(AuthContext);
 
   const handleDecline = async () => {
     try {
@@ -23,7 +23,57 @@ function NotificationModal(props) {
     }
   };
 
-  const handleAccept = () => {};
+  const handleAccept = async () => {
+    // const getUserMedia =
+    //   navigator.getUserMedia ||
+    //   navigator.webkitGetUserMedia ||
+    //   navigator.mozGetUserMedia;
+
+    // console.log("inside handleAccept, peerinstance: ", peerInstance);
+    peerInstance.current.on("call", (call) => {
+      console.log("inside peerInstance.current.on(call)");
+      const mediaStream = navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      call.answer(mediaStream);
+      call.on("stream", (remoteStream) => {
+        props.setRemoteVideo(remoteStream);
+      });
+      // navigator.mediaDevices.getUserMedia(
+      //   { video: true, audio: true },
+      //   (mediaStream) => {
+      //     props.setLocalVideo(mediaStream);
+      //     call.answer(mediaStream); // Answer the call with an A/V stream.
+      //     call.on("stream", (remoteStream) => {
+      //       props.setRemoteVideo(remoteStream);
+      //     });
+      //   },
+      //   (err) => {
+      //     console.log("Failed to get local stream", err);
+      //   }
+      // );
+    });
+
+    // // view current user's video
+    // const mediaStream = await navigator.mediaDevices.getUserMedia({
+    //   video: true,
+    //   audio: true,
+    // });
+    // const call = await peerInstance.current.on("call", (call) => call);
+    // props.setLocalVideo(mediaStream);
+    // call.answer(mediaStream);
+
+    // // view remote user's video
+    // const remoteStream = await call.on(
+    //   "stream",
+    //   (remoteStream) => remoteStream
+    // );
+    // console.log("remoteStream: ", remoteStream);
+    // props.setRemoteVideo(remoteStream);
+
+    handleDecline();
+  };
 
   return (
     <div className={classes["modal--overlay"]}>

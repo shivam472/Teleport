@@ -11,12 +11,14 @@ function FriendList(props) {
   useEffect(() => {
     const handleFriendsUpdates = () => {
       try {
-        const docRef = doc(db, "users", props.user);
-        onSnapshot(docRef, (doc) => {
-          const docData = doc.data();
-          console.log(docData);
-          setFriends([...docData.friends]);
-        });
+        if (props.user) {
+          const docRef = doc(db, "users", props.user);
+          onSnapshot(docRef, (doc) => {
+            const docData = doc.data();
+            console.log(docData);
+            setFriends([...docData.friends]);
+          });
+        }
       } catch (error) {
         console.log(error.message);
       }

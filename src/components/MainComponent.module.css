@@ -4,3 +4,14 @@
   justify-content: space-between;
   z-index: 5;
 }
+
+.video--call {
+  display: flex;
+  align-items: center;
+  z-index: 30;
+  /* position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0; */
+}

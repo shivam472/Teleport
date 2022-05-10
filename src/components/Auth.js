@@ -33,6 +33,7 @@ function Auth() {
             email: user.email,
             friends: [],
             notification: { caller: "", incomingCall: false },
+            peerId: "",
           },
           { merge: true }
         );

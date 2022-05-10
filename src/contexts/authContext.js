@@ -1,16 +1,13 @@
-import { createContext, useState } from "react";
+import { createContext, useRef, useState } from "react";
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginStatus, setLoginStatus] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState("");
   const [callNotification, setCallNotification] = useState(false);
-
-  const setLoginStatus = (status) => {
-    console.log("inside authCtx, login status: ", status);
-    setIsLoggedIn(status);
-  };
+  const [currentUser, setCurrentUser] = useState("");
+  const peerInstance = useRef(null);
 
   const setFriend = (selectedEmail) => {
     setSelectedFriend(selectedEmail);
@@ -28,9 +25,10 @@ export const AuthContextProvider = (props) => {
   };
 
   const contextObj = {
-    isLoggedIn,
+    loginStatus,
     selectedFriend,
     callNotification,
+    peerInstance,
     setLoginStatus,
     setFriend,
     showCallNotification,
