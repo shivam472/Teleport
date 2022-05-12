@@ -1,0 +1,35 @@
+{
+    "editor.minimap.enabled": false,
+    "terminal.integrated.rendererType": "dom",
+    "sync.gist": "",
+    "editor.fontSize": 14,
+    "git.autofetch": true,
+    "extensions.autoUpdate": false,
+    "workbench.startupEditor": "newUntitledFile",
+    "[html]": {
+      "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "files.autoSave": "afterDelay",
+    "editor.wordWrap": "on",
+    "html.format.endWithNewline": true,
+    "html.format.indentInnerHtml": true,
+    "editor.formatOnSave": true,
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "eslint.alwaysShowStatus": true,
+    "eslint.codeAction.showDocumentation": {
+      "enable": true
+    },
+    "workbench.colorTheme": "GitHub Light",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.editor.highlightModifiedTabs": false,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "workbench.editor.enablePreviewFromCodeNavigation": false,
+    "redhat.telemetry.enabled": false
+  }

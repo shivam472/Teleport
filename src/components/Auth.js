@@ -32,7 +32,7 @@ function Auth() {
           {
             email: user.email,
             friends: [],
-            notification: { caller: "", incomingCall: false },
+            notification: { caller: "" },
             peerId: "",
           },
           { merge: true }
