@@ -18,7 +18,10 @@ function Chat(props) {
             height: "30px",
             cursor: "pointer",
           }}
-          onClick={() => props.call(selectedFriend)}
+          onClick={() => {
+            props.call(selectedFriend);
+            props.setCalling(true);
+          }}
         />
       </div>
       <div className={classes["chat"]}>

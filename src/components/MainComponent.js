@@ -10,13 +10,16 @@ import Chat from "./Chat";
 import NotificationModal from "./NotificationModal";
 import notifysound from "../assets/notifysound.mp3";
 import Peer from "peerjs";
+import CallerVideoOverview from "./CallerVideoOverview";
+import ReceiverVideoOverview from "./ReceiverVideoOverview";
 
 const MainComponent = () => {
   const [currentUser, setCurrentUser] = useState("");
   const [callAccepted, setCallAccepted] = useState(false);
+  const [calling, setCalling] = useState(false);
   const [peerId, setPeerId] = useState("");
-  const currentUserVideoRef = useRef(null);
-  const remoteUserVideoRef = useRef(null);
+  const currentUserVideoRef = useRef();
+  const remoteUserVideoRef = useRef();
   const callRef = useRef(null);
   const { showCallNotification, callNotification, peerInstance } =
     useContext(AuthContext);
@@ -132,11 +135,17 @@ const MainComponent = () => {
     }
   };
 
+  console.log("calling: ", calling);
+  console.log("callAccepted: ", callAccepted);
+
   return (
     <div className={classes.main}>
-      <p> My peerId is: {peerId} </p>
       <Friends user={currentUser} />
-      <Chat currentUser={currentUser} call={handleCall} />
+      <Chat
+        currentUser={currentUser}
+        call={handleCall}
+        setCalling={setCalling}
+      />
       {callNotification && (
         <NotificationModal
           currentUser={currentUser}
@@ -144,28 +153,47 @@ const MainComponent = () => {
         />
       )}
 
-      <div className={classes["video--call"]}>
-        <div>
-          currentUserVideo
-          <video
-            ref={currentUserVideoRef}
-            playsInline
-            width={300}
-            height={300}
-            muted
-          />
+      {/* {calling && (
+        <div className={classes["video--container"]}>
+          <div>
+            currentUserVideo
+            <video
+              ref={currentUserVideoRef}
+              playsInline
+              width={300}
+              height={300}
+              muted
+            />
+          </div>
         </div>
-        <div>
-          remoteUserVideo
-          <video
-            ref={remoteUserVideoRef}
-            autoPlay
-            playsInline
-            width={300}
-            height={300}
-          />
+      )} */}
+
+      {(calling || callAccepted) && (
+        <div className={classes["video--container"]}>
+          <div className={classes["currentUserVideo"]}>
+            <div>
+              <video
+                ref={currentUserVideoRef}
+                playsInline
+                width={600}
+                height={600}
+                muted
+              />
+            </div>
+          </div>
+          <div className={classes["remoteUserVideo"]}>
+            <div>
+              <video
+                ref={remoteUserVideoRef}
+                autoPlay
+                playsInline
+                width={600}
+                height={600}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
