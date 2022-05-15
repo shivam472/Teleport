@@ -41,7 +41,7 @@ function Auth() {
 
       setLoginStatus(true);
     } catch (error) {
-      console.log(error.messagge);
+      console.log(error.message);
     }
   };
 
@@ -71,7 +71,7 @@ function Auth() {
       setEmail("");
       setPassword("");
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
@@ -83,9 +83,10 @@ function Auth() {
       navigate("/main");
       setEmail("");
       setPassword("");
+      navigate("/main");
       //   console.log(userCred.user);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 

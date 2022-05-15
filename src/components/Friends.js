@@ -1,14 +1,20 @@
 import classes from "./Friends.module.css";
 import { FiSearch } from "react-icons/fi";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { useState } from "react";
-import { db } from "../firebase";
+import Button from "@mui/material/Button";
+import { useState, useContext } from "react";
+import { db, auth } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 import FriendList from "./FriendList";
+import AuthContext from "../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 
 function Friends(props) {
   const [inputEmail, setInputEmail] = useState("");
   const [searchedFriend, setSearchedFriend] = useState("");
+  const { setLoginStatus } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleFriendSearch = async (inputEmail) => {
     if (inputEmail !== props.user) {
@@ -61,6 +67,18 @@ function Friends(props) {
     }
   };
 
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("user signed out");
+        setLoginStatus(false);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
   return (
     <section className={classes["friends--section"]}>
       <h3 className={classes.user}>{props.user}</h3>
@@ -68,7 +86,7 @@ function Friends(props) {
         <input
           type={"search"}
           value={inputEmail}
-          className={classes["friends--search"]}
+          className={classes["friendsSearchInput"]}
           placeholder="Search People By Email"
           autoComplete="off"
           onChange={(e) => setInputEmail(e.target.value)}
@@ -95,6 +113,12 @@ function Friends(props) {
       )}
       <div className={classes["friend--list"]}>
         <FriendList user={props.user} />
+      </div>
+
+      <div className={classes["signout--button"]}>
+        <Button variant="contained" onClick={handleSignOut}>
+          sign out
+        </Button>
       </div>
     </section>
   );

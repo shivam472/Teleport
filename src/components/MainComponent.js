@@ -10,23 +10,27 @@ import Chat from "./Chat";
 import NotificationModal from "./NotificationModal";
 import notifysound from "../assets/notifysound.mp3";
 import Peer from "peerjs";
-import CallerVideoOverview from "./CallerVideoOverview";
-import ReceiverVideoOverview from "./ReceiverVideoOverview";
+import CallEndIcon from "@mui/icons-material/CallEnd";
 
 const MainComponent = () => {
   const [currentUser, setCurrentUser] = useState("");
   const [callAccepted, setCallAccepted] = useState(false);
   const [calling, setCalling] = useState(false);
-  const [peerId, setPeerId] = useState("");
   const currentUserVideoRef = useRef();
   const remoteUserVideoRef = useRef();
   const callRef = useRef(null);
-  const { showCallNotification, callNotification, peerInstance } =
-    useContext(AuthContext);
+  const {
+    showCallNotification,
+    callNotification,
+    peerInstance,
+    setLoginStatus,
+  } = useContext(AuthContext);
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
-      setCurrentUser(currentUser.email);
+      if (currentUser) {
+        setCurrentUser(currentUser.email);
+      } else console.log("user is signed out");
     });
 
     const peer = new Peer();
@@ -58,7 +62,6 @@ const MainComponent = () => {
 
     peerInstance.current.on("open", (id) => {
       addToDB(id);
-      setPeerId(id);
     });
   }, [currentUser]);
 
@@ -153,44 +156,41 @@ const MainComponent = () => {
         />
       )}
 
-      {/* {calling && (
-        <div className={classes["video--container"]}>
-          <div>
-            currentUserVideo
-            <video
-              ref={currentUserVideoRef}
-              playsInline
-              width={300}
-              height={300}
-              muted
-            />
-          </div>
-        </div>
-      )} */}
-
       {(calling || callAccepted) && (
-        <div className={classes["video--container"]}>
-          <div className={classes["currentUserVideo"]}>
-            <div>
-              <video
-                ref={currentUserVideoRef}
-                playsInline
-                width={600}
-                height={600}
-                muted
-              />
+        <div className={classes["videoOverlay"]}>
+          <div className={classes["video--container"]}>
+            <div className={classes["currentUserVideo"]}>
+              <div>
+                <video
+                  ref={currentUserVideoRef}
+                  playsInline
+                  width={600}
+                  height={600}
+                />
+              </div>
+            </div>
+            <div className={classes["remoteUserVideo"]}>
+              <div>
+                <video
+                  ref={remoteUserVideoRef}
+                  autoPlay
+                  playsInline
+                  width={600}
+                  height={600}
+                />
+              </div>
             </div>
           </div>
-          <div className={classes["remoteUserVideo"]}>
-            <div>
-              <video
-                ref={remoteUserVideoRef}
-                autoPlay
-                playsInline
-                width={600}
-                height={600}
-              />
-            </div>
+          <div className={classes["callEnd"]}>
+            <CallEndIcon
+              style={{
+                color: "white",
+                backgroundColor: "red",
+                padding: "10px",
+                borderRadius: "50%",
+                cursor: "pointer",
+              }}
+            />
           </div>
         </div>
       )}

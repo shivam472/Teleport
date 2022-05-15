@@ -8,6 +8,14 @@
   /* align-items: center; */
 }
 
+.default--message {
+  color: rgba(99, 103, 111, 0.308);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .chat--header {
   display: flex;
   align-items: center;
@@ -39,3 +47,4 @@
   color: white;
   font-size: medium;
 }
+

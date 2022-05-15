@@ -31,7 +31,6 @@ function NotificationModal(props) {
 
   const handleDecline = () => {
     hideCallNotification();
-    // props.setCalling(false);
   };
 
   return (

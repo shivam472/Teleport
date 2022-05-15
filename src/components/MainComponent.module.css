@@ -6,7 +6,7 @@
   z-index: 5;
 }
 
-.video--container {
+.videoOverlay {
   width: 100%;
   height: 100vh;
   position: absolute; 
@@ -14,9 +14,22 @@
   left: 0; 
   right: 0; 
   bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  z-index: 30;
   background-color: rgba(0, 0, 0, 0.626);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.video--container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.currentUserVideo {
+  margin: 10px;
+}
+.remoteUserVideo {
+  margin: 10px;
 }
