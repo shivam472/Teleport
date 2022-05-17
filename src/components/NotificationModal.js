@@ -6,7 +6,7 @@ import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 
 function NotificationModal(props) {
-  const { hideCallNotification } = useContext(AuthContext);
+  const { hideCallNotification, peerInstance } = useContext(AuthContext);
   const [caller, setCaller] = useState("");
 
   useEffect(() => {
@@ -31,6 +31,9 @@ function NotificationModal(props) {
 
   const handleDecline = () => {
     hideCallNotification();
+
+    // Close the connection to the server and terminate all existing connections.
+    peerInstance.current.destroy();
   };
 
   return (

@@ -19,12 +19,8 @@ const MainComponent = () => {
   const currentUserVideoRef = useRef();
   const remoteUserVideoRef = useRef();
   const callRef = useRef(null);
-  const {
-    showCallNotification,
-    callNotification,
-    peerInstance,
-    setLoginStatus,
-  } = useContext(AuthContext);
+  const { showCallNotification, callNotification, peerInstance } =
+    useContext(AuthContext);
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -89,6 +85,7 @@ const MainComponent = () => {
   }, [callAccepted]);
 
   useEffect(() => {
+    // when the current user receives a call
     peerInstance.current.on("call", (call) => {
       console.log("inside peer.on(call)");
       const notificationSound = new Audio(notifysound);
@@ -97,13 +94,20 @@ const MainComponent = () => {
 
       callRef.current = call;
     });
+
+    // Emitted when either you or the remote peer closes the media connection.
+    peerInstance.current.on("close", () => {
+      setCalling(false);
+      setCallAccepted(false);
+    });
   }, []);
 
+  // when the user calls someone
   const handleCall = async (selectedFriend) => {
     if (selectedFriend) {
       const receiverRef = doc(db, "users", selectedFriend);
 
-      // get the peerId of the receiver from the database
+      // get the peerId of the receiver(remote user) from the database
       const docSnap = await getDoc(receiverRef);
       const docData = docSnap.data();
       const remotePeerId = docData.peerId;
@@ -136,6 +140,11 @@ const MainComponent = () => {
         console.log(error.message);
       }
     }
+  };
+
+  const handleEndCall = () => {
+    // Close the connection to the server and terminate all existing connections.
+    peerInstance.current.destroy();
   };
 
   console.log("calling: ", calling);
@@ -190,6 +199,7 @@ const MainComponent = () => {
                 borderRadius: "50%",
                 cursor: "pointer",
               }}
+              onClick={handleEndCall}
             />
           </div>
         </div>

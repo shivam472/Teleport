@@ -1,5 +1,7 @@
 import classes from "./Friends.module.css";
-import { FiSearch } from "react-icons/fi";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Button from "@mui/material/Button";
 import { useState, useContext } from "react";
@@ -83,19 +85,29 @@ function Friends(props) {
     <section className={classes["friends--section"]}>
       <h3 className={classes.user}>{props.user}</h3>
       <div className={classes.search}>
-        <input
-          type={"search"}
-          value={inputEmail}
-          className={classes["friendsSearchInput"]}
-          placeholder="Search People By Email"
-          autoComplete="off"
-          onChange={(e) => setInputEmail(e.target.value)}
-        />
-        <FiSearch
-          className={classes["search--icon"]}
-          onClick={() => {
-            handleFriendSearch(inputEmail);
+        <TextField
+          style={{
+            border: "none",
+            backgroundColor: "white",
+            outline: "none",
+            borderRadius: "5px",
+            padding: "5px 20px",
           }}
+          variant="standard"
+          value={inputEmail}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SearchIcon
+                  onClick={() => handleFriendSearch(inputEmail)}
+                  style={{ cursor: "pointer" }}
+                />
+              </InputAdornment>
+            ),
+            disableUnderline: true,
+          }}
+          placeholder="Search People By Email"
+          onChange={(e) => setInputEmail(e.target.value)}
         />
       </div>
       {searchedFriend && (
