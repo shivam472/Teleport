@@ -5,7 +5,7 @@ import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { db } from "../firebase";
 import AuthContext from "../contexts/authContext";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, onSnapshot } from "firebase/firestore";
 import Chat from "./Chat";
 import NotificationModal from "./NotificationModal";
 import notifysound from "../assets/notifysound.mp3";
@@ -19,8 +19,12 @@ const MainComponent = () => {
   const currentUserVideoRef = useRef();
   const remoteUserVideoRef = useRef();
   const callRef = useRef(null);
-  const { showCallNotification, callNotification, peerInstance } =
-    useContext(AuthContext);
+  const {
+    showCallNotification,
+    callNotification,
+    peerInstance,
+    selectedFriend,
+  } = useContext(AuthContext);
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -28,7 +32,8 @@ const MainComponent = () => {
         setCurrentUser(currentUser.email);
       } else console.log("user is signed out");
     });
-
+  });
+  useEffect(() => {
     const peer = new Peer();
 
     peer.on("open", (id) => {
@@ -37,6 +42,70 @@ const MainComponent = () => {
 
     peerInstance.current = peer;
   }, []);
+
+  useEffect(() => {
+    if (currentUser !== "" && selectedFriend !== "") {
+      const currentUserRef = doc(db, "users", currentUser);
+      const remoteUserRef = doc(db, "users", selectedFriend);
+
+      onSnapshot(currentUserRef, async (doc) => {
+        const docData = doc.data();
+        console.log("docData: ", docData);
+        if (docData.call === "call-end") {
+          const currentUserMediaStream = currentUserVideoRef.current.srcObject;
+          const remoteUserMediaStream = remoteUserVideoRef.current.srcObject;
+
+          console.log("currentUserMediaStream: ", currentUserMediaStream);
+          console.log("remoteUserMediaStream: ", remoteUserMediaStream);
+
+          // get the active media stream(audio and video) and close each of them
+          currentUserMediaStream.getTracks().forEach((track) => {
+            track.stop();
+          });
+          remoteUserMediaStream.getTracks().forEach((track) => {
+            track.stop();
+          });
+
+          setCalling(false);
+          setCallAccepted(false);
+
+          try {
+            await updateDoc(currentUserRef, {
+              call: "inactive",
+            });
+            await updateDoc(remoteUserRef, {
+              call: "inactive",
+            });
+          } catch (error) {
+            console.log(error.message);
+          }
+        } else if (docData.call === "call-declined") {
+          const currentUserMediaStream = currentUserVideoRef.current.srcObject;
+
+          console.log("currentUserMediaStream: ", currentUserMediaStream);
+
+          // get the active media stream(audio and video) and close each of them
+          currentUserMediaStream.getTracks().forEach((track) => {
+            track.stop();
+          });
+
+          setCalling(false);
+          setCallAccepted(false);
+
+          try {
+            await updateDoc(currentUserRef, {
+              call: "inactive",
+            });
+            await updateDoc(remoteUserRef, {
+              call: "inactive",
+            });
+          } catch (error) {
+            console.log(error.message);
+          }
+        }
+      });
+    }
+  });
 
   useEffect(() => {
     console.log("inside useEffect");
@@ -94,18 +163,13 @@ const MainComponent = () => {
 
       callRef.current = call;
     });
-
-    // Emitted when either you or the remote peer closes the media connection.
-    peerInstance.current.on("close", () => {
-      setCalling(false);
-      setCallAccepted(false);
-    });
   }, []);
 
   // when the user calls someone
-  const handleCall = async (selectedFriend) => {
-    if (selectedFriend) {
-      const receiverRef = doc(db, "users", selectedFriend);
+  const handleCall = async (friendSelected) => {
+    if (friendSelected) {
+      const callerRef = doc(db, "users", currentUser);
+      const receiverRef = doc(db, "users", friendSelected);
 
       // get the peerId of the receiver(remote user) from the database
       const docSnap = await getDoc(receiverRef);
@@ -114,7 +178,11 @@ const MainComponent = () => {
       console.log("remotePeerId: ", remotePeerId);
 
       try {
+        await updateDoc(callerRef, {
+          call: "active",
+        });
         await updateDoc(receiverRef, {
+          call: "active",
           notification: {
             caller: currentUser,
           },
@@ -127,6 +195,8 @@ const MainComponent = () => {
         const mediaStream = await navigator.mediaDevices.getUserMedia({
           video: true,
         });
+
+        console.log("mediaStream: ", mediaStream);
         currentUserVideoRef.current.srcObject = mediaStream;
         currentUserVideoRef.current.play();
 
@@ -142,9 +212,19 @@ const MainComponent = () => {
     }
   };
 
-  const handleEndCall = () => {
-    // Close the connection to the server and terminate all existing connections.
-    peerInstance.current.destroy();
+  const handleEndCall = async () => {
+    const currentUserRef = doc(db, "users", currentUser);
+    const remoteUserRef = doc(db, "users", selectedFriend);
+    try {
+      await updateDoc(currentUserRef, {
+        call: "call-end",
+      });
+      await updateDoc(remoteUserRef, {
+        call: "call-end",
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   console.log("calling: ", calling);

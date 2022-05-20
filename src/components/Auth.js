@@ -34,6 +34,7 @@ function Auth() {
             friends: [],
             notification: { caller: "" },
             peerId: "",
+            call: "inactive",
           },
           { merge: true }
         );

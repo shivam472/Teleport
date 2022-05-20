@@ -3,10 +3,10 @@ import Button from "@mui/material/Button";
 import AuthContext from "../contexts/authContext";
 import { useContext, useState, useEffect } from "react";
 import { db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 function NotificationModal(props) {
-  const { hideCallNotification, peerInstance } = useContext(AuthContext);
+  const { hideCallNotification, selectedFriend } = useContext(AuthContext);
   const [caller, setCaller] = useState("");
 
   useEffect(() => {
@@ -29,11 +29,22 @@ function NotificationModal(props) {
     hideCallNotification();
   };
 
-  const handleDecline = () => {
+  const handleDecline = async () => {
     hideCallNotification();
 
-    // Close the connection to the server and terminate all existing connections.
-    peerInstance.current.destroy();
+    const currentUserRef = doc(db, "users", props.currentUser);
+    const remoteUserRef = doc(db, "users", selectedFriend);
+
+    try {
+      await updateDoc(currentUserRef, {
+        call: "call-declined",
+      });
+      await updateDoc(remoteUserRef, {
+        call: "call-declined",
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
