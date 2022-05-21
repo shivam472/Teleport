@@ -249,25 +249,20 @@ const MainComponent = () => {
         <div className={classes["videoOverlay"]}>
           <div className={classes["video--container"]}>
             <div className={classes["currentUserVideo"]}>
-              <div>
-                <video
-                  ref={currentUserVideoRef}
-                  playsInline
-                  width={600}
-                  height={600}
-                />
-              </div>
+              <video
+                width="100%"
+                className="video"
+                ref={currentUserVideoRef}
+                playsInline
+              />
             </div>
             <div className={classes["remoteUserVideo"]}>
-              <div>
-                <video
-                  ref={remoteUserVideoRef}
-                  autoPlay
-                  playsInline
-                  width={600}
-                  height={600}
-                />
-              </div>
+              <video
+                width="100%"
+                ref={remoteUserVideoRef}
+                autoPlay
+                playsInline
+              />
             </div>
           </div>
           <div className={classes["callEnd"]}>
@@ -278,6 +273,7 @@ const MainComponent = () => {
                 padding: "10px",
                 borderRadius: "50%",
                 cursor: "pointer",
+                marginTop: "50px",
               }}
               onClick={handleEndCall}
             />

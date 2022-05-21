@@ -7,7 +7,7 @@
 }
 
 .videoOverlay {
-  width: 100%;
+  /* width: 100vh; */
   height: 100vh;
   position: absolute; 
   top: 0;
@@ -25,11 +25,18 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
 
 .currentUserVideo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 10px;
 }
 .remoteUserVideo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 10px;
 }
