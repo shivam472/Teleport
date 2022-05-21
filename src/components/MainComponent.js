@@ -136,6 +136,7 @@ const MainComponent = () => {
         try {
           const mediaStream = await navigator.mediaDevices.getUserMedia({
             video: true,
+            audio: true,
           });
           currentUserVideoRef.current.srcObject = mediaStream;
           currentUserVideoRef.current.play();
@@ -194,6 +195,7 @@ const MainComponent = () => {
       try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({
           video: true,
+          audio: true,
         });
 
         console.log("mediaStream: ", mediaStream);
