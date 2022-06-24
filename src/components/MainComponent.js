@@ -255,6 +255,8 @@ const MainComponent = () => {
                 width="100%"
                 className="video"
                 ref={currentUserVideoRef}
+                autoPlay
+                muted
                 playsInline
               />
             </div>
@@ -263,6 +265,7 @@ const MainComponent = () => {
                 width="100%"
                 ref={remoteUserVideoRef}
                 autoPlay
+                muted
                 playsInline
               />
             </div>
