@@ -265,7 +265,6 @@ const MainComponent = () => {
                 width="100%"
                 ref={remoteUserVideoRef}
                 autoPlay
-                muted
                 playsInline
               />
             </div>

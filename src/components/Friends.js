@@ -46,19 +46,20 @@ function Friends(props) {
   const handleAddFriend = async () => {
     try {
       // both the parties will be added to each other's friend lists
-      const docRef = doc(db, "users", props.user);
-      const docSnap = await getDoc(docRef);
-      const docData = docSnap.data();
+      const currentUserDocRef = doc(db, "users", props.user);
+      const currentUserDocSnap = await getDoc(currentUserDocRef);
+      const currentUserDocData = currentUserDocSnap.data();
+
       const searchedFriendDocRef = doc(db, "users", searchedFriend);
       const searchedFriendDocSnap = await getDoc(searchedFriendDocRef);
       const searchedFriendDocData = searchedFriendDocSnap.data();
 
       // add a friend into the current user's friend list
-      await updateDoc(docRef, {
-        friends: [...docData.friends, searchedFriend],
+      await updateDoc(currentUserDocRef, {
+        friends: [...currentUserDocData.friends, searchedFriend],
       });
 
-      // add the current user as a friend into the searched user's friend's list
+      // add the current user into the searched user's friend list
       await updateDoc(searchedFriendDocRef, {
         friends: [...searchedFriendDocData.friends, props.user],
       });

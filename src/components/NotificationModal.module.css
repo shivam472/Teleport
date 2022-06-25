@@ -15,8 +15,9 @@
 
 .modal--container {
   padding: 20px;
-  width: 450px;
-  height: 200px;
+  width: 60%;
+  height: 25%;
   background-color: white;
+  border-radius: 10px;
   z-index: 20;
 }
