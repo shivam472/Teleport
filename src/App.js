@@ -17,7 +17,7 @@ function App() {
     });
   }, []);
 
-  console.log("isLoggedIn: ", isLoggedIn);
+  // console.log("isLoggedIn: ", isLoggedIn);
 
   return (
     <div className="App">

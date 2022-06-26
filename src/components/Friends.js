@@ -29,17 +29,15 @@ function Friends(props) {
           const currentDocSnap = await getDoc(currentUserDocRef);
           const currentDocData = currentDocSnap.data();
           if (!currentDocData.friends.includes(inputEmail)) {
-            console.log("Document data: ", docSnap.data());
+            // console.log("Document data: ", docSnap.data());
             const docData = docSnap.data();
             setSearchedFriend(docData.email);
           }
           setInputEmail("");
         } catch (error) {
-          console.log(error);
+          console.error(error.message);
         }
-      } else {
-        console.log("No such document!");
-      }
+      } else console.log("No such document!");
     }
   };
 
@@ -66,19 +64,19 @@ function Friends(props) {
 
       setSearchedFriend("");
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-        console.log("user signed out");
+        // console.log("user signed out");
         setLoginStatus(false);
         navigate("/");
       })
       .catch((error) => {
-        console.log(error.message);
+        console.error(error.message);
       });
   };
 

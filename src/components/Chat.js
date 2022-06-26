@@ -24,6 +24,7 @@ function Chat(props) {
   useEffect(() => {
     if (selectedFriend) {
       try {
+        // users (collection) -> currentUser -> Chats (subcollection) -> selectedFriend -> messages (subcollection)
         const currentUserChatCollectionRef = collection(
           db,
           "users",
@@ -40,6 +41,7 @@ function Chat(props) {
           limit(50)
         );
 
+        // retrieve theh messages
         onSnapshot(q, (snapshot) => {
           setMessages(snapshot.docs.map((doc) => doc.data()));
         });
@@ -96,12 +98,14 @@ function Chat(props) {
         "messages"
       );
 
+      // add the message into the local user's database
       await addDoc(localUserMessagesCollectionRef, {
         createdAt: serverTimestamp(),
         from: props.currentUser,
         message: inputMessage,
       });
 
+      // add the message into the remote user's database
       await addDoc(remoteUserMessagesCollectionRef, {
         createdAt: serverTimestamp(),
         from: props.currentUser,
@@ -110,7 +114,7 @@ function Chat(props) {
 
       setInputMessage("");
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 

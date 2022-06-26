@@ -10,17 +10,17 @@ export const AuthContextProvider = (props) => {
 
   const setFriend = (selectedEmail) => {
     setSelectedFriend(selectedEmail);
-    console.log("inside authCtx, current selected friend: ", selectedEmail);
+    // console.log("inside authCtx, current selected friend: ", selectedEmail);
   };
 
   const showCallNotification = () => {
     setCallNotification(true);
-    console.log("inside showCallNotification");
+    // console.log("inside showCallNotification");
   };
 
   const hideCallNotification = () => {
     setCallNotification(false);
-    console.log("inside hideCallNotification");
+    // console.log("inside hideCallNotification");
   };
 
   const contextObj = {

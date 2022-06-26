@@ -42,7 +42,7 @@ function Auth() {
 
       setLoginStatus(true);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -53,9 +53,9 @@ function Auth() {
       const user = response.user;
       createUser(user);
       navigate("/main");
-      console.log("inside handleSignIn: ", user);
+      // console.log("inside handleSignIn: ", user);
     } catch (err) {
-      console.log(err.message);
+      console.error(err.message);
     }
   };
 
@@ -72,7 +72,7 @@ function Auth() {
       setEmail("");
       setPassword("");
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -87,7 +87,7 @@ function Auth() {
       navigate("/main");
       //   console.log(userCred.user);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 

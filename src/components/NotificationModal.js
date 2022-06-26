@@ -17,7 +17,7 @@ function NotificationModal(props) {
         const docData = docSnap.data();
         setCaller(docData.notification.caller);
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     };
 
@@ -43,7 +43,7 @@ function NotificationModal(props) {
         call: "call-declined",
       });
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 

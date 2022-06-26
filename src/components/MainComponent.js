@@ -50,13 +50,13 @@ const MainComponent = () => {
 
       onSnapshot(currentUserRef, async (doc) => {
         const docData = doc.data();
-        console.log("docData: ", docData);
+        // console.log("docData: ", docData);
         if (docData.call === "call-end") {
           const currentUserMediaStream = currentUserVideoRef.current.srcObject;
           const remoteUserMediaStream = remoteUserVideoRef.current.srcObject;
 
-          console.log("currentUserMediaStream: ", currentUserMediaStream);
-          console.log("remoteUserMediaStream: ", remoteUserMediaStream);
+          // console.log("currentUserMediaStream: ", currentUserMediaStream);
+          // console.log("remoteUserMediaStream: ", remoteUserMediaStream);
 
           // get the active media stream(audio and video) and close each of them
           currentUserMediaStream.getTracks().forEach((track) => {
@@ -77,12 +77,12 @@ const MainComponent = () => {
               call: "inactive",
             });
           } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
           }
         } else if (docData.call === "call-declined") {
           const currentUserMediaStream = currentUserVideoRef.current.srcObject;
 
-          console.log("currentUserMediaStream: ", currentUserMediaStream);
+          // console.log("currentUserMediaStream: ", currentUserMediaStream);
 
           // get the active media stream(audio and video) and close each of them
           currentUserMediaStream.getTracks().forEach((track) => {
@@ -100,7 +100,7 @@ const MainComponent = () => {
               call: "inactive",
             });
           } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
           }
         }
       });
@@ -108,8 +108,8 @@ const MainComponent = () => {
   });
 
   useEffect(() => {
-    console.log("inside useEffect");
-    console.log("currentUser: ", currentUser);
+    // console.log("inside useEffect");
+    // console.log("currentUser: ", currentUser);
 
     // add current user's peer id to database
     const addToDB = async (id) => {
@@ -121,7 +121,7 @@ const MainComponent = () => {
           });
         }
       } catch (err) {
-        console.log(err.message);
+        console.error(err.message);
       }
     };
 
@@ -142,12 +142,12 @@ const MainComponent = () => {
           currentUserVideoRef.current.play();
           callRef.current.answer(mediaStream);
           callRef.current.on("stream", (remoteStream) => {
-            console.log("remoteStream answer: ", remoteStream);
+            // console.log("remoteStream answer: ", remoteStream);
             remoteUserVideoRef.current.srcObject = remoteStream;
             remoteUserVideoRef.current.play();
           });
         } catch (error) {
-          console.log(error.message);
+          console.error(error.message);
         }
       }
     };
@@ -157,7 +157,7 @@ const MainComponent = () => {
   useEffect(() => {
     // when the current user receives a call
     peerInstance.current.on("call", (call) => {
-      console.log("inside peer.on(call)");
+      // console.log("inside peer.on(call)");
       const notificationSound = new Audio(notifysound);
       notificationSound.play();
       showCallNotification();
@@ -176,7 +176,7 @@ const MainComponent = () => {
       const docSnap = await getDoc(receiverRef);
       const docData = docSnap.data();
       const remotePeerId = docData.peerId;
-      console.log("remotePeerId: ", remotePeerId);
+      // console.log("remotePeerId: ", remotePeerId);
 
       try {
         await updateDoc(callerRef, {
@@ -189,7 +189,7 @@ const MainComponent = () => {
           },
         });
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
 
       try {
@@ -198,18 +198,18 @@ const MainComponent = () => {
           audio: true,
         });
 
-        console.log("mediaStream: ", mediaStream);
+        // console.log("mediaStream: ", mediaStream);
         currentUserVideoRef.current.srcObject = mediaStream;
         currentUserVideoRef.current.play();
 
         const call = peerInstance.current.call(remotePeerId, mediaStream);
         call.on("stream", (remoteStream) => {
-          console.log("remoteStream: ", remoteStream);
+          // console.log("remoteStream: ", remoteStream);
           remoteUserVideoRef.current.srcObject = remoteStream;
           remoteUserVideoRef.current.play();
         });
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     }
   };
@@ -225,12 +225,12 @@ const MainComponent = () => {
         call: "call-end",
       });
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
-  console.log("calling: ", calling);
-  console.log("callAccepted: ", callAccepted);
+  // console.log("calling: ", calling);
+  // console.log("callAccepted: ", callAccepted);
 
   return (
     <div className={classes.main}>

@@ -15,12 +15,12 @@ function FriendList(props) {
           const docRef = doc(db, "users", props.user);
           onSnapshot(docRef, (doc) => {
             const docData = doc.data();
-            console.log(docData);
+            // console.log(docData);
             setFriends([...docData.friends]);
           });
         }
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     };
     handleFriendsUpdates();
