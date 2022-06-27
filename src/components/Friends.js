@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 function Friends(props) {
   const [inputEmail, setInputEmail] = useState("");
   const [searchedFriend, setSearchedFriend] = useState("");
-  const { setLoginStatus } = useContext(AuthContext);
+  const { setLoginStatus, selectedFriend } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleFriendSearch = async (inputEmail) => {
@@ -80,8 +80,21 @@ function Friends(props) {
       });
   };
 
+  // for phone screen
+  const isMobile = window.screen.width < 700 ? true : false;
+
+  // if a friend is selected then show the chat section otherwise show the friends section
+  let friendsSectionClass =
+    isMobile && !selectedFriend ? "mobile--open" : "mobile--close";
+
+  // console.log("friends section class: ", friendsSectionClass);
+
   return (
-    <section className={classes["friends--section"]}>
+    <section
+      className={`${classes["friends--section"]} ${
+        classes[`${isMobile && friendsSectionClass}`]
+      }`}
+    >
       <h3 className={classes.user}>{props.user}</h3>
       <div className={classes.search}>
         <TextField

@@ -24,6 +24,12 @@
   margin: 0 20px;
 }
 
+.back--button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .selected--friend {
   color: white;
 }
@@ -89,4 +95,9 @@
   border-top-left-radius: 1000px;
   float: left;
   width: fit-content;
+}
+
+.chat-section--mobile {
+  width: 0;
+  display: none;
 }

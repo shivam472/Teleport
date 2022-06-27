@@ -62,9 +62,11 @@ const MainComponent = () => {
           currentUserMediaStream.getTracks().forEach((track) => {
             track.stop();
           });
-          remoteUserMediaStream.getTracks().forEach((track) => {
-            track.stop();
-          });
+          if (remoteUserMediaStream) {
+            remoteUserMediaStream.getTracks().forEach((track) => {
+              track.stop();
+            });
+          }
 
           setCalling(false);
           setCallAccepted(false);
@@ -253,6 +255,7 @@ const MainComponent = () => {
             <div className={classes["currentUserVideo"]}>
               <video
                 width="100%"
+                height="300"
                 className="video"
                 ref={currentUserVideoRef}
                 autoPlay
@@ -263,6 +266,7 @@ const MainComponent = () => {
             <div className={classes["remoteUserVideo"]}>
               <video
                 width="100%"
+                height="300"
                 ref={remoteUserVideoRef}
                 autoPlay
                 playsInline

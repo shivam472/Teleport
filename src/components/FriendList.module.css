@@ -1,9 +1,13 @@
-.friends--text {
-  color: white;
-  margin-left: 10px;
-  margin-top: 0;
+.friends-text--container {
   border-top: 1px solid #2a1f38;
   border-bottom: 1px solid #2a1f38;
+  margin-bottom: 3%;
+}
+.friends--text {
+  color: white;
+  margin: 2px;
+  margin-left: 10px;
+  padding: 0;
 }
 
 .friend--list {
@@ -23,4 +27,16 @@
   cursor: pointer;
   font-size: large;
   margin: 10px 0 10px 0;
+  text-align: center;
+  padding: 5px;
+}
+
+.email--container {
+  width: 100%;
+  justify-content: center;
+}
+
+.margin {
+  border-bottom: 1px solid #2a1f38;
+  width: 100%;
 }

@@ -51,7 +51,7 @@ function NotificationModal(props) {
     <div className={classes["modal--overlay"]}>
       <div className={classes["modal--container"]}>
         <div className={classes.title}>
-          <h1>Incoming video call from {caller} </h1>
+          <h2>Incoming video call from {caller} </h2>
         </div>
         <div className={classes.footer}>
           <Button

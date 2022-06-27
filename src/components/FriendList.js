@@ -28,18 +28,22 @@ function FriendList(props) {
 
   return (
     <>
-      <p className={classes["friends--text"]}>Friends</p>
+      <div className={classes["friends-text--container"]}>
+        <p className={classes["friends--text"]}>Friends</p>
+      </div>
       <ul className={classes["friend--list"]}>
         {friends.map((friend) => (
-          <li
-            key={friend}
-            className={classes["friend--email"]}
-            onClick={() => {
-              setSelectedFriend(friend);
-            }}
-          >
-            {friend}
-          </li>
+          <div className={classes['email--container']} key={friend}>
+            <li
+              className={classes["friend--email"]}
+              onClick={() => {
+                setSelectedFriend(friend);
+              }}
+            >
+              {friend}
+            </li>
+            <div className={classes.margin}></div>
+          </div>
         ))}
       </ul>
     </>

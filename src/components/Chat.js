@@ -2,6 +2,7 @@ import classes from "./Chat.module.css";
 import AuthContext from "../contexts/authContext";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import SendIcon from "@mui/icons-material/Send";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useContext, useEffect, useState } from "react";
 import { db } from "../firebase";
 import {
@@ -17,7 +18,7 @@ import {
 } from "firebase/firestore";
 
 function Chat(props) {
-  const { selectedFriend } = useContext(AuthContext);
+  const { selectedFriend, setFriend } = useContext(AuthContext);
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
@@ -118,8 +119,15 @@ function Chat(props) {
     }
   };
 
+  // for phone screens
+  // console.log("screen width: ", window.screen.width);
+  const isMobile = window.screen.width < 700 ? true : false;
+  const chatSectionClass =
+    isMobile && !selectedFriend ? "chat-section--mobile" : "chat--section";
+  // console.log("chat section class: ", chatSectionClass);
+
   return (
-    <section className={classes["chat--section"]}>
+    <section className={classes[chatSectionClass]}>
       {!selectedFriend && (
         <div className={classes["default--message"]}>
           <h2>Select a friend to start chatting.</h2>
@@ -128,6 +136,14 @@ function Chat(props) {
       {selectedFriend && (
         <>
           <div className={classes["chat--header"]}>
+            {isMobile && (
+              <div className={classes["back--button"]}>
+                <ArrowBackIcon
+                  style={{ color: "white" }}
+                  onClick={() => setFriend("")}
+                />
+              </div>
+            )}
             <h1 className={classes["selected--friend"]}>{selectedFriend}</h1>
             <VideoCallIcon
               style={{
