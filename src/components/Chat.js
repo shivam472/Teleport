@@ -53,6 +53,8 @@ function Chat(props) {
   }, [selectedFriend]);
 
   const handleSendMessage = async () => {
+    if (inputMessage.trim().length === 0) return;
+
     try {
       // users (collection) -> currentUser -> Chats (subcollection) -> selectedFriend
       const localUserChatDocRef = doc(
@@ -182,9 +184,10 @@ function Chat(props) {
             <SendIcon
               style={{
                 color: "#6C31FF",
-                width: "25px",
-                height: "25px",
+                width: "45px",
+                height: "45px",
                 cursor: "pointer",
+                marginLeft: "10px"
               }}
               onClick={handleSendMessage}
             />
